@@ -2,107 +2,34 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Généalogie France - Recherche dans bases publiques</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #f4f4f4;
-        color: #333;
-    }
-    header {
-        background: #005bbb;
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-    }
-    .container {
-        max-width: 1000px;
-        margin: 30px auto;
-        padding: 20px;
-        background: #fff;
-        box-shadow: 0px 0px 5px rgba(0,0,0,0.1);
-    }
-    input, button {
-        padding: 10px;
-        margin: 5px 0;
-        width: 100%;
-    }
-    button {
-        background: #005bbb;
-        color: white;
-        border: none;
-        cursor: pointer;
-    }
-    button:hover {
-        background: #003f88;
-    }
-    .links {
-        margin-top: 20px;
-    }
-    .links a {
-        display: block;
-        margin: 8px 0;
-        color: #005bbb;
-        text-decoration: none;
-    }
-</style>
+<title>Généalogie France</title>
 </head>
 <body>
 
-<header>
-    <h1>Généalogie France – Recherche dans bases publiques</h1>
-    <p>Un portail de recherche vers les bases de données publiques légales (France)</p>
-</header>
+<h1>Recherche généalogique (bases publiques)</h1>
 
-<div class="container">
-    <!-- Formulaire de recherche -->
-    <h2>Rechercher un ancêtre</h2>
+<input id="nom" placeholder="Nom">
+<input id="prenom" placeholder="Prénom">
+<input id="lieu" placeholder="Commune">
 
-    <input type="text" id="searchNom" placeholder="Nom">
-    <input type="text" id="searchPrenom" placeholder="Prénom">
-    <input type="date" id="searchDate" placeholder="Date de naissance (si connue)">
-    <input type="text" id="searchLieu" placeholder="Lieu (commune/département)">
+<button onclick="rechercher()">Rechercher</button>
 
-    <button onclick="lancerRecherche()">Lancer la recherche</button>
-
-    <p id="message"></p>
-
-    <!-- Liens vers sources publiques -->
-    <div class="links">
-        <h3>Bases de données publiques</h3>
-        <a href="https://www.data.gouv.fr/fr/datasets/" target="_blank">Data.gouv.fr – Catalogue données ouvertes</a>
-        <a href="https://www.insee.fr/fr/statistiques" target="_blank">INSEE – Statistiques & données publiques</a>
-        <a href="https://gallica.bnf.fr/" target="_blank">Gallica (BnF) – Documents historiques numérisés</a>
-        <a href="https://archivesdefrance.culture.gouv.fr/" target="_blank">Archives de France – Portail national</a>
-        <a href="https://www.geneanet.org/" target="_blank">Geneanet – Arbres et documents (publics)</a>
-        <a href="https://archives.hauts-de-seine.fr/" target="_blank">Exemple Archives départementales (Hauts-de-Seine)</a>
-        <a href="https://archives.seine-saint-denis.fr/" target="_blank">Exemple Archives départementales (Seine-Saint-Denis)</a>
-        <a href="https://archives.bouches-du-rhone.fr/" target="_blank">Exemple Archives départementales (Bouches-du-Rhône)</a>
-        <!-- Tu peux ajouter ici les liens directs vers chaque département -->
-    </div>
-</div>
+<pre id="resultats"></pre>
 
 <script>
-function lancerRecherche() {
-    const nom = document.getElementById("searchNom").value;
-    const prenom = document.getElementById("searchPrenom").value;
-    const date = document.getElementById("searchDate").value;
-    const lieu = document.getElementById("searchLieu").value;
+async function rechercher() {
+  const res = await fetch("http://localhost:3000/api/search", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nom: nom.value,
+      prenom: prenom.value,
+      lieu: lieu.value
+    })
+  });
 
-    if (!nom && !prenom && !lieu) {
-        document.getElementById("message").innerText = "Merci de saisir au moins un critère de recherche.";
-        return;
-    }
-
-    document.getElementById("message").innerText = "➡️ Recherche en cours... (ceci est une simulation)";
-
-    // Ici tu peux envoyer les données vers un backend via AJAX/Fetch
-    // Exemple :
-    // fetch("/api/recherche", { method: "POST", body: JSON.stringify({nom,prenom,date,lieu}) })
-    //     .then(rep => rep.json())
-    //     .then(data => afficherResultats(data));
+  const data = await res.json();
+  resultats.textContent = JSON.stringify(data, null, 2);
 }
 </script>
 
