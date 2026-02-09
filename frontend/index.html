@@ -1,37 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Généalogie France</title>
-</head>
-<body>
-
-<h1>Recherche généalogique (bases publiques)</h1>
-
-<input id="nom" placeholder="Nom">
-<input id="prenom" placeholder="Prénom">
-<input id="lieu" placeholder="Commune">
-
-<button onclick="rechercher()">Rechercher</button>
-
-<pre id="resultats"></pre>
-
-<script>
-async function rechercher() {
-  const res = await fetch("http://localhost:3000/api/search", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nom: nom.value,
-      prenom: prenom.value,
-      lieu: lieu.value
-    })
-  });
-
-  const data = await res.json();
-  resultats.textContent = JSON.stringify(data, null, 2);
-}
-</script>
-
-</body>
-</html>
+fetch("https://TON-PROJET.vercel.app/api/search", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ nom, prenom, lieu })
+});
